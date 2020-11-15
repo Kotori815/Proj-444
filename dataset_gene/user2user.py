@@ -21,7 +21,7 @@ follow_network = dict()             # following edges
 user_set = dict()                   # record all the users expanded
 current_layer, next_layer = start_list, list()
 # users waiting to be expanded in this and next round
-bili.video.get_download_url(bvid=)
+
 try:
     for i in range(dig_depth):
         print("expand layer {}".format(i+1))
