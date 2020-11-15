@@ -34,4 +34,4 @@ class Extractor():
             s = match.group(0)[self.index:]
             matches.append(s)
         return matches
-
+        

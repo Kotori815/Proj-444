@@ -10,7 +10,7 @@ my_following = bili.user.get_followings_g(me)
 # get uids of my followings
 extract_uid = Extractor('"mid": ')
 following_list = list()
-for user in tqdm(my_following):
+for user in my_following:
     user_info = json.dumps(user)
     uid = extract_uid.get_info_s(user_info)
     following_list.append(int(uid))
