@@ -3,7 +3,7 @@ import random, re, json, tqdm
 # import pickle as pkl
 from util import Extractor, outputPath
 
-start_list = [31374926, 8275216, 325045503, 5394044, 10426409, 9164472, 38137569]
+start_list = [31374926, 8275216, 325045503, 5394044, 10426409]
 # 31374926 is me
 
 dig_depth = 3
