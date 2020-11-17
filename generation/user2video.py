@@ -3,39 +3,43 @@ import random, re, json
 from tqdm import tqdm
 from util import Extractor, outputPath
 
-# get my followings generator
-me = 31374926
-my_following = bili.user.get_followings_g(me)
+# get users
+print("reading user list")
+with open(outputPath + "users_all.json", 'r') as f:
+    user_list = json.load(f)
+    user_list = list(user_list.keys())
+print("load {} users".format(len(user_list)))
 
-# get uids of my followings
-extract_uid = Extractor('"mid": ')
-following_list = list()
-for user in my_following:
-    user_info = json.dumps(user)
-    uid = extract_uid.get_info_s(user_info)
-    following_list.append(int(uid))
-
+# for each user, get the subscribed bangumi
 extract_bangumi = Extractor('"season_id": ')
 user_bangumi = dict()
-for user in tqdm(following_list):
-    # Some users set subscribing bangumi invisible, 
-    # which will raise exception when accessing.
+bangumi_set = dict()
+print('=====================================================')
+print('Requesting subscribing bangumi information')
+for i, user in tqdm(enumerate(user_list)):
+    bangumi_g = bili.user.get_bangumi_g(uid=user)
+    temp = list()
     try:
-        bili.user.get_bangumi_raw(user)
-    except:
-        continue
+        for bangumi in bangumi_g:
+            bangumi_info = json.dumps(bangumi)
+            season_id = extract_bangumi.get_info_s(bangumi_info)
+            temp.append(season_id)
+            # recording the bangumi found
+            bangumi_set[season_id] = True
+    except bili.exceptions.BilibiliApiException as e:
+        if e.code == 412:
+            # too much access, rejected by server
+            print("Getting error code 412")
+            break
+        elif e.code == 53013:
+            # user not publishing subscribing bangunmi
+            user_bangumi[user] = []
+            continue
 
-    temp = list()        
-    bangumi_g = bili.user.get_bangumi_g(user)    
-    for bangumi in bangumi_g:
-        bangumi_info = json.dumps(bangumi)
-        match = extract_bangumi.get_info_s(bangumi_info)
-        temp.append(int(match))
-    # If a user has no subscribing bangumi, then ignore him/her
-    if len(temp):
-        user_bangumi[user] = temp
+    user_bangumi[user] = temp
 
-
-output = outputPath + "user2video.json"
-with open(output, 'w') as f:
+print('=====================================================')
+print('Collecting {} users, {} bangumi'.format(i, len(bangumi_set)))
+with open(outputPath + "user2video.json", 'w') as f:
+    print("writing subscribings")
     json.dump(user_bangumi, f)
