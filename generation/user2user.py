@@ -1,7 +1,7 @@
 import bilibili_api as bili
 import random, re, json, tqdm
 # import pickle as pkl
-from util import Extractor, outputPath
+from generation.util import Extractor, outputPath
 
 start_list = [31374926, 8275216, 325045503, 5394044, 10426409]
 # 31374926 is me
@@ -27,7 +27,7 @@ try:
                 continue
 
             get_cnt += 1
-            followings = bili.user.get_followings_raw(user)
+            followings = bili.user.get_followings_raw(uid=user)
             followings_info = json.dumps(followings)
             follow_list = extrac_uid.get_info_list(followings_info)
 

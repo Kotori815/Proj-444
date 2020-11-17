@@ -28,6 +28,8 @@ class Extractor():
         """
         Get a list of multiple info from the full string
         """
+        if info_full == '':
+            return []
         matching = re.finditer(self.pattern, info_full)
         matches = list()
         for match in matching:
