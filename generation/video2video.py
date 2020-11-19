@@ -1,8 +1,8 @@
 import bilibili_api as bili
 import random, json, tqdm
-from generation.util import Extractor, outputPath
+from util import Extractor, outputPath
 
-start_list = ["BV1rr4y1F7c3"] #, 885292352, 542802265, 245278735, 457796356, 797798335, 287764576, 627792561, 927760278, 970315820]
+start_list = ['BV1rr4y1F7c3', 'BV13K4y1j7Za', 'BV1Qi4y1L7es', 'BV1ev411r7vb', 'BV1q5411V7ST', 'BV1cy4y167pb', 'BV1pf4y1q7uu', 'BV19t4y1e7vm', 'BV18K4y1Z7Xy', 'BV19p4y167Uk']
 # Choosen from bilibili technology site rankings 20/11/19 
 
 dig_depth = 2
