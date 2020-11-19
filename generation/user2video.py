@@ -1,7 +1,7 @@
 import bilibili_api as bili
-import random, re, json
+import random, json, tqdm
 from tqdm import tqdm
-from util import Extractor, outputPath
+from generation.util import Extractor, outputPath
 
 # get users
 print("reading user list")
@@ -11,21 +11,19 @@ with open(outputPath + "users_all.json", 'r') as f:
 print("load {} users".format(len(user_list)))
 
 # for each user, get the subscribed bangumi
-extract_bangumi = Extractor('"season_id": ')
 user_bangumi = dict()
 bangumi_set = dict()
 print('=====================================================')
 print('Requesting subscribing bangumi information')
 for i, user in tqdm(enumerate(user_list)):
-    bangumi_g = bili.user.get_bangumi_g(uid=user)
+    bangumi_g = bili.user.get_bangumi_g(uid=user) # generator
     temp = list()
     try:
         for bangumi in bangumi_g:
-            bangumi_info = json.dumps(bangumi)
-            season_id = extract_bangumi.get_info_s(bangumi_info)
-            temp.append(season_id)
+            temp.append(bangumi['season_id'])
             # recording the bangumi found
-            bangumi_set[season_id] = True
+            bangumi_set[bangumi['season_id']] = True
+
     except bili.exceptions.BilibiliApiException as e:
         if e.code == 412:
             # too much access, rejected by server

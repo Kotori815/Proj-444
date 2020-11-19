@@ -1,5 +1,5 @@
 import bilibili_api as bili
-import random, re, json, tqdm
+import random, json, tqdm
 # import pickle as pkl
 from generation.util import Extractor, outputPath
 
@@ -27,9 +27,8 @@ try:
                 continue
 
             get_cnt += 1
-            followings = bili.user.get_followings_raw(uid=user)
-            followings_info = json.dumps(followings)
-            follow_list = extrac_uid.get_info_list(followings_info)
+            followings_info = bili.user.get_followings_raw(uid=user)
+            follow_list = [u['mid'] for u in followings_info[:10]]
 
             follow_network[user] = follow_list[:10]
             next_layer += follow_list[:10]
