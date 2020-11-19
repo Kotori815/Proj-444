@@ -5,7 +5,7 @@ from util import Extractor, outputPath
 start_list = ['BV1rr4y1F7c3', 'BV13K4y1j7Za', 'BV1Qi4y1L7es', 'BV1ev411r7vb', 'BV1q5411V7ST', 'BV1cy4y167pb', 'BV1pf4y1q7uu', 'BV19t4y1e7vm', 'BV18K4y1Z7Xy', 'BV19p4y167Uk']
 # Choosen from bilibili technology site rankings 20/11/19 
 
-dig_depth = 2
+dig_depth = 3
 
 relate_network = dict()             # following edges
 video_set = dict()                   # record all the users expanded
