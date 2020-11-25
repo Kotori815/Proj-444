@@ -13,4 +13,4 @@ We collect and establish our own dataset, and currently the contents are scripts
 ## Acknowledgement
 Some key python libraries:
 - [`bilibili_api`](https://github.com/Passkou/bilibili_api)
-- [NetworkX](https://networkx.org/)
+- [`NetworkX`](https://networkx.org/)
