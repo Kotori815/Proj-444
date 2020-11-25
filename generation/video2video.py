@@ -13,7 +13,6 @@ current_layer, next_layer = start_list, list()
 # users waiting to be expanded in this and next round
 
 break_flag = False
-
 get_cnt = 0
 try:
     for i in range(dig_depth):
