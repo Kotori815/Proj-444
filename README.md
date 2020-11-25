@@ -10,5 +10,7 @@ These are codes for course project of VE444 Networks, UM-SJTU JI, partially adap
 ## Contents
 We collect and establish our own dataset, and currently the contents are scripts for dataset generation and simple datasets. This repo (as well as the README) would be polished as the project going on.
 
-## acknowledgement
-API library [`bilibili_api`](https://github.com/Passkou/bilibili_api)
+## Acknowledgement
+Some key python libraries:
+- [`bilibili_api`](https://github.com/Passkou/bilibili_api)
+- [NetworkX](https://networkx.org/)
