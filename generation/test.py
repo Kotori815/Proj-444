@@ -1,3 +1,7 @@
-import bilibili_api as bili
-me = 31374926
-bili.user.get_followings_raw(31374926)
+import json
+from util import Extractor, outputPath
+
+a = "aaaaa"
+
+with open(outputPath + "aaa.txt", 'w') as f:
+    json.dump(a, f)

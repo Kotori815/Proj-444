@@ -12,6 +12,8 @@ video_set = dict()                   # record all the users expanded
 current_layer, next_layer = start_list, list()
 # users waiting to be expanded in this and next round
 
+break_flag = False
+
 get_cnt = 0
 try:
     for i in range(dig_depth):
@@ -19,7 +21,7 @@ try:
         print("expand layer {} with {} videos in waiting list".format(i+1, len(current_layer)))
         s1, l = len(video_set), 0
 
-        for video in tqdm.tqdm(current_layer):
+        for j, video in tqdm.tqdm(enumerate(current_layer)):
             if video_set.get(video):
                 continue
 
@@ -33,12 +35,13 @@ try:
 
             l += len(relate)
 
-        print("{} new videos, {} new relates".format(len(video_set) - s1, l))
+        print("{} new videos, {} new recommendations".format(len(video_set) - s1, l))
         current_layer, next_layer = next_layer, list()
 except:
     # too much accessing (about 500) the server, access denied for 
     # the following hour
     print("Getting error code 412")
+    break_flag = True
     if random.random() < 0.1:
         print("Uncle Chen is watching you")
 
@@ -50,3 +53,8 @@ with open(outputPath + "video_all.json", 'w') as f:
 with open(outputPath + "video2video.json", 'w') as f:
     print("Wrinting {} relates".format(l))
     json.dump(relate_network, f)
+
+if break_flag:
+    with open(outputPath + "breakpoint.json", 'w') as f:
+        print("Writing {} videos waiting".format(len(current_layer) + len(next_layer) - j))
+        json.dump(current_layer[j:] + next_layer, f)
