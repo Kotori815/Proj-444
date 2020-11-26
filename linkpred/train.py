@@ -17,9 +17,6 @@ from sklearn.neighbors import KNeighborsClassifier
 
 from sklearn.metrics import accuracy_score, roc_auc_score, confusion_matrix
 
-
-
-
 predictors = np.array(dataset[['distance', 'jaccard', 'adamic_adar']])
 response = dataset['link']
 xtrain, xtest, ytrain, ytest = train_test_split(predictors, response,
