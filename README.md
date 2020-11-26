@@ -12,5 +12,6 @@ We collect and establish our own dataset, and currently the contents are scripts
 
 ## Acknowledgement
 Some key python libraries:
-- [`bilibili_api`](https://github.com/Passkou/bilibili_api)
-- [`NetworkX`](https://networkx.org/)
+- [`bilibili_api`](https://github.com/Passkou/bilibili_api): APIs to collect informations from [Bilibili](https://www.bilibili.com), [documentation](https://passkou.com/bilibili_api/docs).
+- [`NetworkX`](https://networkx.org/): A library for studying graphs and networks. It offers a wide range of graph and network-related classes and algorithms.
+- [scikit-learn (`sklearn`)](https://scikit-learn.org/): Simple and efficient tools for machine learning and data analysis.
