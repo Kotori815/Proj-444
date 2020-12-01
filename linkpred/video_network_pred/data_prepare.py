@@ -6,6 +6,17 @@ from tqdm import tqdm
 import random, json
 from node2vec import Node2Vec
 
+"""
+Read data of video recommendation network. Create dataset by
+choosing non-existing edges as negative enties, and randomly 
+removed existing edges as positive entries.
+
+Extract features from training network. Two ways are used:
+1. naive extracting: calculating pair-wise distance, jaccard
+and adamic_adar index;
+2. node2vec algorithm: a random-walk network node embeder
+"""
+
 dataset_path = "./dataset/"
 
 def read_data() -> (nx.Graph, dict):
