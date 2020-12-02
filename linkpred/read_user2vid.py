@@ -17,10 +17,10 @@ and adamic_adar index;
 2. node2vec algorithm: a random-walk network node embeder
 """
 
-dataset_path = "./dataset/"
+dataset_path = "../dataset/"
 
-def read_data() -> (nx.Graph, dict):
-    with open(dataset_path + "user2video.json", 'r') as f:
+def read_data(filename: str) -> (nx.Graph, dict):
+    with open(filename, 'r') as f:
         u2v_network = json.load(f)
 
     G = nx.Graph()
@@ -80,6 +80,8 @@ def genarate_dataset(graph: nx.Graph, users: list, videos: list) -> (pd.DataFram
     print("===================")
     print("Dataset info:")
     print(data['link'].value_counts())
+    
+    data = data.reset_index().drop('index', axis=1)
 
     return data, G_train
 
@@ -108,7 +110,7 @@ def process_parameters_naive(dataset: pd.DataFrame, graph_train: nx.Graph) -> pd
     return dataset
 
 
-def process_parameters_node2vec(dataset: pd.DataFrame, graph_train: nx.Graph, dim: int=100, walk_len: int=16, num_walks: int=50) -> pd.DataFrame:
+def process_parameters_node2vec(dataset: pd.DataFrame, graph_train: nx.Graph, dim: int=25, walk_len: int=16, num_walks: int=25) -> pd.DataFrame:
     """
     Returns a pandas.DataFrame class, with columns\n
     | index | users | videos | dim_1 | ... | dim_n |\n
@@ -119,7 +121,11 @@ def process_parameters_node2vec(dataset: pd.DataFrame, graph_train: nx.Graph, di
 
     embeddings = np.empty((0, dim))
     for u,v in zip(dataset['users'], dataset['videos']):
-        embeddings = np.vstack((embeddings, n2w_model[str(u)] + n2w_model[str(v)]))
+        try:
+            newline = n2w_model[str(u)] + n2w_model[str(v)]
+        except:
+            newline = np.zeros((1, dim))
+        embeddings = np.vstack((embeddings, newline))
 
     colname = ["dim_{}".format(i) for i in range(dim)]
     dataset = pd.concat([dataset, 
@@ -127,9 +133,3 @@ def process_parameters_node2vec(dataset: pd.DataFrame, graph_train: nx.Graph, di
                                       columns = colname)],axis=1)
     return dataset
     
-
-graph, bvid2index = read_data()
-# draw_degree_hist(graph)
-dataset, graph_train = genarate_dataset(graph)
-# dataset = process_parameters_naive(dataset, graph_train)
-dataset = process_parameters_node2vec(dataset, graph_train)
