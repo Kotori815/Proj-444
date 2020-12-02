@@ -19,8 +19,8 @@ and adamic_adar index;
 
 dataset_path = "./dataset/"
 
-def read_data() -> (nx.Graph, dict):
-    with open(dataset_path + "video2video_bfs.json", 'r') as f:
+def read_data(filename: str) -> (nx.Graph, dict):
+    with open(filename, 'r') as f:
         vid_network = json.load(f)
 
     G = nx.Graph()
@@ -33,7 +33,7 @@ def read_data() -> (nx.Graph, dict):
             if bvid2index.get(v) == None:
                 bvid2index[v] = len(bvid2index)
             G.add_edge(bvid2index[vid], bvid2index[v])
-            
+
     print("Graph with {} nodes and {} edges".format(G.number_of_nodes(), G.number_of_edges()))
     return G, bvid2index
 
@@ -44,7 +44,7 @@ def draw_degree_hist(G: nx.Graph, save: bool = False):
         degreeDict[deg] = degreeDict.get(deg, 0) + 1
 
     max_degree = max(degreeDict.keys())
-    
+
     x = list(range(1, max_degree + 1))
     y = [degreeDict.get(i, 0) for i in x]    
     a = plt.bar(x, y)
@@ -71,7 +71,7 @@ def genarate_dataset(graph: nx.Graph) -> (pd.DataFrame, nx.Graph):
     unlinked = unlinked.loc[index]
     unlinked['link'] = 0
     print("{} negative entries".format(int(len(node_1) / 100)))
-    
+
     # get all existing edges
     print("generating positive entries")
     node_1, node_2 = list(), list()
@@ -100,9 +100,13 @@ def genarate_dataset(graph: nx.Graph) -> (pd.DataFrame, nx.Graph):
     data = linked.loc[omissible_links]
     data['link'] = 1
     data = data.append(unlinked[['node_1', 'node_2', 'link']])
+
     print("===================")
     print("Dataset info:")
     print(data['link'].value_counts())
+    print("===================")
+
+    data = data.reset_index().drop('index', axis=1)
 
     return data, G_temp
 
@@ -129,7 +133,7 @@ def process_parameters_naive(dataset: pd.DataFrame, graph_train: nx.Graph) -> pd
     return dataset
 
 
-def process_parameters_node2vec(dataset: pd.DataFrame, graph_train: nx.Graph, dim: int=100, walk_len: int=16, num_walks: int=50) -> pd.DataFrame:
+def process_parameters_node2vec(dataset: pd.DataFrame, graph_train: nx.Graph, dim: int=25, walk_len: int=16, num_walks: int=25) -> pd.DataFrame:
     """
     Returns a pandas.DataFrame class, with columns\n
     | index | node_1 | node_2 | dim_1 | ... | dim_n |\n
@@ -138,20 +142,13 @@ def process_parameters_node2vec(dataset: pd.DataFrame, graph_train: nx.Graph, di
     node2vec = Node2Vec(graph_train, dimensions=dim, walk_length=walk_len, num_walks=num_walks)
     n2w_model = node2vec.fit(window=7, min_count=1)
 
-    embeddings = np.empty((0, 50))
+    embeddings = np.empty((0, dim))
     for u,v in zip(dataset['node_1'], dataset['node_2']):
         embeddings = np.vstack((embeddings, n2w_model[str(u)] + n2w_model[str(v)]))
 
-    colname = colname = ["dim_{}".format(i) for i in range(dim)]
+    colname = ["dim_{}".format(i) for i in range(dim)]
     dataset = pd.concat([dataset, 
                          pd.DataFrame(data = embeddings,
-                                      columns = colname)])
-    
+                                      columns = colname)], axis=1)
     return dataset
-    
 
-graph, bvid2index = read_data()
-# draw_degree_hist(graph)
-dataset, graph_train = genarate_dataset(graph)
-# dataset = process_parameters_naive(dataset, graph_train)
-dataset = process_parameters_node2vec(dataset, graph_train)

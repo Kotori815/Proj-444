@@ -5,8 +5,6 @@ import pandas as pd
 from tqdm import tqdm
 import random
 
-from linkpred.video_network_pred.data_prepare import graph, graph_train, dataset
-
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
@@ -15,6 +13,13 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 
 from sklearn.metrics import accuracy_score, roc_auc_score, confusion_matrix
+
+from read_vid2vid import *
+
+graph, bvid2index = read_data("../dataset/video2video_bfs.json")
+dataset, graph_train = genarate_dataset(graph)
+# dataset = process_parameters_naive(dataset, graph_train)
+dataset = process_parameters_node2vec(dataset, graph_train)
 
 predictors = np.array(dataset.iloc[:, 3:])
 response = dataset['link']
