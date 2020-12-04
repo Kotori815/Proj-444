@@ -8,7 +8,15 @@ These are codes for course project of VE444 Networks, UM-SJTU JI, partially adap
   Precit a user's preferences based on the preferences of those who have relationships with him/her.
 
 ## Contents
-We collect and establish our own dataset. Currently the contents are scripts for dataset generation and simple datasets. This repo (as well as the README) would be polished as the project going on.
+- `dataset`: contains all the data used in his project. All are of Python `dict` class stored as `json` files.
+    - `following`: following network of users. (Actually not used)
+    - `user2video` & `users_all.json`: 1344 subscribed bangumis of 492 users, totally 4559 subscriptions. (for social recommendation & link predition)
+    - `video2video_bfs.json` & `video_all_bfs.json`: the video recommendation network of 843 videos, totally 1060 recommendations. (for link prediction)
+- `generation1`: scripts to collect Bilibili user and video info. Information is collected by Breath-first-search (BFS).
+- `linkpred`: scripts and notebooks of link predictions. Linkpred is run on 
+    - User-video bipartite graph
+    - Whole video reommendation graph
+- `social`: scripts and notebooks of social recommendation.
 
 ## Acknowledgement
 Some key python libraries:
